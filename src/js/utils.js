@@ -37,3 +37,13 @@ export function renderListWithTemplate(template, parent, list, callback) {
     parent.appendChild(fillTemplate);
   });
 }
+
+
+export function renderWithTemplate(template, parent, data, callback) {
+  //const template = document.getElementById("product-card-template");
+ 
+  const clone = template.content.cloneNode(true);
+  const fillTemplate = callback(clone, product);
+  parent.appendChild(fillTemplate);
+ 
+}
