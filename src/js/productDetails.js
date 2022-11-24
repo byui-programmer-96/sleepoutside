@@ -1,4 +1,4 @@
-import { setLocalStorage, loadHeaderFooter } from "./utils.js";
+import { setLocalStorage, loadHeaderFooter, getLocalStorage } from "./utils.js";
 
 loadHeaderFooter();
 
@@ -24,6 +24,12 @@ export default class ProductDetails {
   }
 
   addToCart() {
+    let cartContents = getLocalStorage('so-cart');
+    if(!cartContents){
+      cartContents=[];
+    }
+    
+    cartContents.push(this.product)
     setLocalStorage("so-cart", this.product);
   }
 
