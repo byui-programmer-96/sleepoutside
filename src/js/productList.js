@@ -9,7 +9,9 @@ export default class ProductList {
 
   async init() {
     const list = await this.dataSource.getData();
-    this.renderList(list);
+    let short = [];
+    short.push(list[0],list[1],list[2],list[3]);
+    this.renderList(short);
   }
 
   renderList(list) {
