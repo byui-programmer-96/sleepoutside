@@ -1,4 +1,4 @@
-import { getLocalStorage, renderListWithTemplate } from "./utils";
+import { renderListWithTemplate, getLocalStorage } from "./utils";
 
 export default class ShoppingCart {
   constructor(key, listElement) {
@@ -9,6 +9,18 @@ export default class ShoppingCart {
   async init() {
     const list = getLocalStorage(this.key);
     this.renderList(list);
+ 
+  }
+
+
+
+  prepareTemplate(template, product) {
+    template.querySelector(".cart-card__image img").src = product.Image;
+    template.querySelector(".cart-card__image img").alt += product.Name;
+    template.querySelector(".card__name").textContent = product.Name;
+    template.querySelector(".cart-card_color").textContent = product.Colors[0].ColorName;
+    template.querySelector(".cart-card__price").textContent += productFinalPrice;
+    return template;
   }
 
   renderList(list) {
@@ -20,14 +32,5 @@ export default class ShoppingCart {
       list,
       this.prepareTemplate
     );
-  }
-
-  prepareTemplate(template, product) {
-    template.querySelector(".cart-card__image img").src = product.Image;
-    template.querySelector(".cart-card__image img").alt += product.Name;
-    template.querySelector(".card__name").textContent = product.Name;
-    template.querySelector(".cart-card_color").textContent = product.Colors[0].ColorName;
-    template.querySelector(".cart-card__price").textContent += productFinalPrice;
-    return template;
   }
 }

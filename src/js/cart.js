@@ -1,4 +1,4 @@
-import { loadHeaderFooter } from "./utils";
+import { loadHeaderFooter } from "./utils.js";
 import ShoppingCart from './shoppingCart.js';
 
 loadHeaderFooter();
