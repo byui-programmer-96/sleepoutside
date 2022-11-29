@@ -1,4 +1,35 @@
 import { getLocalStorage } from "./utils";
+import ExternalServices from "./externalServices.js";
+
+const services = new ExternalServices();
+
+function formDataToJSON(formElement){
+  const formData = new FormData(formElement),
+   convertedJSON = {};
+  formData.forEach(function(value, key){
+    convertedJSON[key] = value;
+  });
+
+  return convertedJSON;
+  
+
+}
+
+function packageItems(items){
+  const simplifiedItems = items.map((item) =>{
+    console.log(item);
+    return{
+      id: item.Id,
+      price: item.FinalPrice,
+      name: item.Name,
+      quantity: 1,
+    }
+  })
+
+  return simplifiedItems
+
+
+}
 
 export default class CheckoutProcess{
   constructor(key, outputSelector){
@@ -14,12 +45,15 @@ export default class CheckoutProcess{
   init(){
     this.list = getLocalStorage(this.key);
     this.calculateItemSummary();
+    this.calculateOrdertotal();
+ 
+  
 
   }
 
   calculateItemSummary(){
-    const summaryElement = document.querySelector(this.outputSelector + '#cartTotal');
-    const itemNumElement = document.querySelector(this.outputSelector + '#num-items');
+    const summaryElement = document.querySelector(this.outputSelector + ' #cartTotal');
+    const itemNumElement = document.querySelector(this.outputSelector + ' #num-items');
 
     itemNumElement.innerText = this.list.length;
 
@@ -29,7 +63,10 @@ export default class CheckoutProcess{
   }
 
   calculateOrdertotal(){
-    this.shipping = 10 + (this.list.lenght -1) * 2;
+  
+    this.shipping = 10 + (this.list.length - 1) * 2;
+ 
+
     this.tax = (this.itemTotal * 0.06).toFixed(2);
    
 
@@ -51,5 +88,26 @@ export default class CheckoutProcess{
     orderTotal.innerText = '$' + this.orderTotal;
   }
 
+  async checkout(){
+    const formElement = document.forms['checkout'];
+
+    const json = formDataToJSON(formElement);
+
+    json.orderDate = new Date();
+    json.orderTotal = this.orderTotal;
+    json.tax = this.tax;
+    json.shipping = this.shipping;
+    json.items = packageItems(this.list);
+
+    console.log(json);
+
+    try{
+      const res =await services.checkout(json);
+      console.log(res);
+    }catch (err){
+      console.log(err);
+    }
+
+  }
 
 }
